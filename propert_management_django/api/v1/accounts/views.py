@@ -8,11 +8,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 
-from general.http import HttpRequest
 from accounts.models import User
+from general.http import HttpRequest
 from general.encryptions import encrypt, decrypt
-from general.functions import is_valid_uuid, getDomain, generate_serializer_errors, send_email
 from api.v1.accounts.serializers import SignupSerializer, LoginSerializer
+from general.functions import is_valid_uuid, getDomain, generate_serializer_errors, send_email, format_errors
 
 
 # @api_view(["GET"])
@@ -116,6 +116,7 @@ def email_confirmation(request: HttpRequest, token):
     return Response("User not found")
 
 
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def login(request: HttpRequest):
@@ -128,7 +129,7 @@ def login(request: HttpRequest):
             "statusCode": 6001,
             "data": {
                 "title": "Validation Error",
-                "message": generate_serializer_errors(serialized._errors)
+                "message": generate_serializer_errors(serialized._errors),
             }
         }
 

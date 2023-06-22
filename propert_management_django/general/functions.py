@@ -84,7 +84,7 @@ def is_valid_uuid(value):
         return False
 
 
-def get_client_ip(request: HttpRequest)-> str:
+def get_client_ip(request: HttpRequest) -> str:
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 
     if x_forwarded_for:
@@ -102,13 +102,13 @@ def resize_image(image: bytes or str, size: tuple = (30, 30)):
     return resized_image
 
 
-def is_ajax(request:HttpRequest)-> bool:
+def is_ajax(request: HttpRequest) -> bool:
     # navigate - normal http request
     # cors - ajax request
     return request.META.get("HTTP_SEC_FETCH_MODE") == "cors"
 
 
-def getDomain(request: HttpRequest)-> str:
+def getDomain(request: HttpRequest) -> str:
     protocol = "http://"
 
     if request.is_secure():
@@ -119,12 +119,11 @@ def getDomain(request: HttpRequest)-> str:
     return protocol + host
 
 
-
-
-
 """
 To get serializer errors from validation errors
 """
+
+
 def generate_serializer_errors(args):
     message = ""
     for key, values in args.items():
@@ -159,7 +158,7 @@ def send_email(to_address, subject, content, html_content, attachment=None, atta
     return new_message.sent
 
 
-def convert_base64_image_to_image(base64_image:str,name:str=None):
+def convert_base64_image_to_image(base64_image: str, name: str = None):
     """
          converting base64 image into normal image type
     """
@@ -172,3 +171,12 @@ def convert_base64_image_to_image(base64_image:str,name:str=None):
     final_image = ContentFile(base64.b64decode(imgstr), name=f'{name}.{ext}')
 
     return final_image
+
+
+def format_errors(errors: object):
+    first_key, val = next(iter(errors.items()))
+
+    error_message = errors.get(first_key)[0]
+    error_code = errors.get('error_code', 3001)[0]
+
+    return (error_message, error_code)
