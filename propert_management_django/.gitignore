@@ -1,5 +1,8 @@
 .env
-static 
-media  
-.pyc
-__pyc__
+static
+*.pyc
+_pycache_
+db.sqlite3
+.DS_Store
+/media
+migrations
