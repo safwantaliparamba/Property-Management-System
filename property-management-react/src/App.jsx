@@ -29,6 +29,7 @@ const App = () => {
 						name: data.name,
 						email: data.email,
 						username: data.username,
+						isLandlord: data.is_landlord,
 					}))
 				} else {
 					setExpired(true)

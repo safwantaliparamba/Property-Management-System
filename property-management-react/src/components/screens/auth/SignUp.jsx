@@ -15,6 +15,7 @@ import { login } from '../../../store/authSlice'
 import SilentLink from '../../includes/SilentLink'
 import ThemeToggle from '../../includes/ToggleTheme'
 import Emailverification from '../../includes/modals/auth/Emailverification'
+import { Helmet } from 'react-helmet'
 
 
 const SignUp = ({ type = "SIGNUP" }) => {
@@ -136,8 +137,7 @@ const SignUp = ({ type = "SIGNUP" }) => {
 							email: data.email,
 							accessToken: data.access,
 							refreshToken: data.refresh,
-							username: data.username ?? "",
-							sessionId: data.session_id,
+							isLandlord: data.is_landlord,
 						}))
 						const next = searchParams.get("next")
 
@@ -196,6 +196,9 @@ const SignUp = ({ type = "SIGNUP" }) => {
 					closeHandler={emailModalCloseHandler}
 				/>
 			}
+			<Helmet>
+				<title>{buttonTitle} | RentWise</title>
+			</Helmet>
 			<Wrapper theme={theme}>
 				<Left theme={theme}>
 					<div className="top">

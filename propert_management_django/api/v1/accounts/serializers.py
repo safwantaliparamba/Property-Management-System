@@ -100,6 +100,7 @@ class LoginSerializer(serializers.Serializer):
                     "title":"Success",
                     "email":user.email,
                     "name":user.name,
+                    "is_landlord": False,
                     "refresh": response.json().get("refresh"),
                     "access": response.json().get("access"),
                 }       
