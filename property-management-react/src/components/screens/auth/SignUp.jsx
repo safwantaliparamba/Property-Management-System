@@ -136,8 +136,7 @@ const SignUp = ({ type = "SIGNUP" }) => {
 							email: data.email,
 							accessToken: data.access,
 							refreshToken: data.refresh,
-							username: data.username ?? "",
-							sessionId: data.session_id,
+							isLandlord: data.is_landlord,
 						}))
 						const next = searchParams.get("next")
 

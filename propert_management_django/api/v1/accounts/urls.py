@@ -10,7 +10,7 @@ app_name = 'api_v1_accounts'
 urlpatterns = [
     # DRF Auth routes
     # base api to check user session and other informations
-    # re_path(r'^app/$',views.app), 
+    re_path(r'^app/$',views.app), 
     # auth
     re_path(r'^sign-up/$',views.signup),
     re_path(r'^sign-in/$',views.login),

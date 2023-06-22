@@ -15,43 +15,21 @@ from api.v1.accounts.serializers import SignupSerializer, LoginSerializer
 from general.functions import is_valid_uuid, getDomain, generate_serializer_errors, send_email, format_errors
 
 
-# @api_view(["GET"])
-# def app(request: HttpRequest):
-#     user: User = request.user
+@api_view(["GET"])
+def app(request: HttpRequest):
+    user: User = request.user
 
-#     if session_id and UserSession.objects.filter(id= session_id, is_active=True, is_deleted=False).exists():
-#         session = UserSession.objects.filter(id= session_id, is_active=True, is_deleted=False).latest("date_added")
+    response_data = {
+        "statusCode": 6000,
+        "data": {
+            "title": "Success",
+            "name": user.name,
+            "email": user.email,
+            "isLandlord": False,  # set it up 
+        }
+    }
 
-#         session.last_active = timezone.now()
-#         session.save()
-
-#         is_pro_member = user.membership_type == "pro"
-#         notification_count = 129
-#         bookmark_count = 2
-
-
-#         response_data = {
-#             "statusCode": 6000,
-#             "data": {
-#                 "title": "Success",
-#                 "name": user.name,
-#                 "email": user.email,
-#                 "username": user.username,
-#                 "is_pro_member": is_pro_member,              # set it up
-#                 "bookmark_count": bookmark_count,            # set it up
-#                 "notification_count":notification_count,     # set it up
-#             }
-#         }
-#     else:    
-#         response_data = {
-#             "statusCode": 6001,
-#             "data": {
-#                 "title": "Failed",
-#                 "message": "session not found",
-#             }
-#         }
-
-#     return Response(response_data, status=status.HTTP_200_OK)
+    return Response(response_data, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])

@@ -8,6 +8,7 @@ const initialState = {
     username: getItem("username"),
     accessToken: getItem("accessToken"),
     refreshToken: getItem("refreshToken"),
+    isLandlord: getItem("isLandlord") ?? false,
     isAuthenticated: getItem("isAuthenticated") ?? false,
 }
 
@@ -17,12 +18,13 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login: (state, { payload }) => {
-            const { email, name, username, accessToken, refreshToken } = payload
+            const { email, name, username, accessToken, refreshToken, isLandlord } = payload
 
             setItem("name", name)
             setItem("email", email)
             setItem("username", username)
             setItem("isAuthenticated", true)
+            setItem("isLandlord", isLandlord)
             setItem("accessToken", accessToken)
             setItem("refreshToken", refreshToken)
 
