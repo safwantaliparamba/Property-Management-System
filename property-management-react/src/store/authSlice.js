@@ -31,11 +31,12 @@ const authSlice = createSlice({
             return { ...state, ...payload, isAuthenticated: true }
         },
         editUserData: (state, { payload }) => {
-            const { name = state.name, email = state.email, username = state.username } = payload
+            const { name = state.name, email = state.email, username = state.username, isLandlord = state.isLandlord } = payload
 
             setItem("name", name)
             setItem("email", email)
             setItem("username", username)
+            setItem("isLandlord", isLandlord)
 
             return { ...state, ...payload }
         },
