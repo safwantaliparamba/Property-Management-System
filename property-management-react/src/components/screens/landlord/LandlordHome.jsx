@@ -8,10 +8,10 @@ import useClickOutside from 'react-use-click-outside-hook'
 
 import { trimText } from '../../functions'
 import homeImage from "/images/home-1.jpg"
-import { Button } from '../../includes/home/Header'
-import CreateProperties from '../../includes/modals/CreateProperties'
 import { authApi } from '../../../config/axios'
 import Loader from '../../includes/loaders/Loader'
+import { Button } from '../../includes/home/Header'
+import CreateProperties from '../../includes/modals/CreateProperties'
 
 
 const LandlordHome = () => {
@@ -22,8 +22,11 @@ const LandlordHome = () => {
     const [isLoading, setLoading] = useState(false)
     const [showCreateProp, setCreate] = useState(false)
     const [items, setItems] = useState([])
+    const [top, setTop] = useState(0)
+    const [left, setLeft] = useState(0)
+    const [showContextModal, setContext] = useState(false)
 
-    const fetchRentals = ()=>{
+    const fetchRentals = () => {
         setLoading(true)
 
         authApi
@@ -72,13 +75,56 @@ const LandlordHome = () => {
     //     )
     // }
 
-    const closeCreateModal = ()=>{
+    const onContextChange = (e) => {
+        e.preventDefault();
+        const modal = document?.getElementById("context-modal")
+
+        if (e.pageX + modal.clientWidth > window.innerWidth) {
+            setLeft(e.clientX - modal.clientWidth)
+        } else {
+            setLeft(e.clientX)
+        }
+
+        if (e.pageY + modal.clientHeight > window.innerHeight) {
+            setTop(e.clientY - modal.clientHeight)
+        } else {
+            setTop(e.clientY)
+        }
+    }
+
+    const closeCreateModal = () => {
         setCreate(false)
         fetchRentals()
     }
 
+    const CloseContextModal = () => {
+        setContext(false)
+    }
+
+    const ContextModal = () => {
+        const modalRef = useClickOutside(CloseContextModal)
+
+        return (
+            <ContextModalWrapper
+                className={showContextModal ? "active" : ""}
+                ref={modalRef}
+                id="context-modal"
+                top={top}
+                left={left}
+            >
+                <ContextItem>
+                    <span>Edit</span>
+                </ContextItem>
+                <ContextItem>
+                    <span className="delete">Delete</span>
+                </ContextItem>
+            </ContextModalWrapper>
+        )
+    }
+
     return (
         <Wrapper>
+            <ContextModal />
             {showCreateProp && (
                 <CreateProperties
                     onClose={closeCreateModal}
@@ -106,6 +152,10 @@ const LandlordHome = () => {
                     {items?.map(item => (
                         <Item
                             key={item.id}
+                            onContextMenu={e => {
+                                setContext(true)
+                                onContextChange(e)
+                            }}
                         // onClick={e => navigate(`/prop/${item.id}/`)}
                         >
                             <img src={homeImage} alt="" />
@@ -181,15 +231,13 @@ const ModalItem = styled.div`
     }
 `
 const Content = styled.div`
-    
+ 
 `
 const LoaderWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
 `
-
-
 const Items = styled.section`
     width: 80%;
     margin: 0 auto;
@@ -215,7 +263,6 @@ const Item = styled.div`
 		filter: brightness(0.5);
     }
 `
-
 const ItemDetails = styled.div`
     /* position: absolute; */
 	/* border: 1px solid #ffffffae; */
@@ -241,4 +288,46 @@ const ItemDetails = styled.div`
 		font-size: 14px;
 		color: #292929;
 	}
+`
+const ContextModalWrapper = styled.div`
+    /* display: none; */
+    visibility: none;
+    border: 1px solid #fff;
+    background-color: rgb(22 22 25);
+    opacity: 0;
+    user-select: none;
+    position: absolute;
+    z-index: 15;
+    top: ${({ top }) => `${top}px`};
+    left: ${({ left }) => `${left}px`};
+    width: 200px;
+    overflow:hidden;
+    border-radius: 12px;
+
+    &.active{
+        visibility:visible;
+        user-select:auto;
+        opacity:1;
+    }
+`
+
+const ContextItem = styled.div`
+    width: 100%;
+    cursor: pointer;
+
+    span{
+        padding: 6px 12px;
+        font-size: 16px;
+        display: block;
+        width: 100%;
+        color: #fff;
+
+        &.delete{
+            color: red;
+        }
+    }
+
+    &:hover{
+        background-color: #8080803a;
+    }
 `
