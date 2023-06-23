@@ -1,14 +1,12 @@
 import uuid
 
 from django.db import models
-from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
+from general.models import BaseModel
 from general.encryptions import encrypt
-# from general.models import BaseModel
-# from general.middlewares import RequestMiddleware
-# from general.functions import random_password,get_auto_id,generate_unique_id
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -58,3 +56,16 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
     
+
+class Landlord(BaseModel):
+    user = models.ForeignKey(User, related_name='landlord',on_delete=models.CASCADE)
+    is_verified = models.BooleanField(default=False)
+    
+    class Meta:
+        db_table = 'accounts_landlord'
+        verbose_name = 'Landlord'
+        verbose_name_plural = 'Landlords'
+        ordering = ('-date_added',)
+
+    def __str__(self):
+        return self.user.name

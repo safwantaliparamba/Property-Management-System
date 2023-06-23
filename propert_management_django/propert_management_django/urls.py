@@ -8,6 +8,7 @@ urlpatterns = [
     path('chief/', admin.site.urls), #django admin urls
     
     path('api/v1/accounts/', include('api.v1.accounts.urls','api_v1_accounts')),
+    path('api/v1/rentals/', include('api.v1.rentals.urls','api_v1_rentals')),
     
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS}),

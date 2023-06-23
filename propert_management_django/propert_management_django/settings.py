@@ -30,7 +30,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
 
-    'accounts',
+    "web",
+    "general",
+    "rentals",
+    "accounts",
+    "payments",
 ]
 
 MIDDLEWARE = [

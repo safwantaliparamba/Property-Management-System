@@ -98,9 +98,9 @@ class LoginSerializer(serializers.Serializer):
                 "statusCode":6000,
                 "data":{
                     "title":"Success",
-                    "email":user.email,
                     "name":user.name,
-                    "is_landlord": False,
+                    "email":user.email,
+                    "is_landlord": True,
                     "refresh": response.json().get("refresh"),
                     "access": response.json().get("access"),
                 }       

@@ -9,11 +9,14 @@ import profile from "/images/profile-demo.jpg"
 import searchDark from "/icons/search-dark.svg"
 import searchLight from "/icons/search-light.svg"
 import { logout } from '../../../store/authSlice'
+import { useNavigate } from 'react-router-dom'
 
 
 const Header = () => {
     const { theme } = useSelector(state => state.ui)
     const { isLandlord, name } = useSelector(state => state.auth)
+    
+    const navigate = useNavigate()
 
     const [isActive, setActive] = useState(false)
     const [searchInput, setSearch] = useState("")
@@ -75,7 +78,7 @@ const Header = () => {
     return (
         <Container theme={theme}>
             <Left theme={theme}>
-                <Logo navToHome  />
+                <Logo navToHome />
                 <SearchBar
                     theme={"DARK"}
                     className={isActive ? "active" : ""}
@@ -107,7 +110,11 @@ const Header = () => {
                 </SearchBar>
             </Left>
             <Right>
-                {!isLandlord && (
+                {isLandlord ? (
+                    <Button onClick={e => navigate("/")}>
+                        Home page
+                    </Button>
+                ) : (
                     <Button>Become a Landlord</Button>
                 )}
                 <Profile onClick={e => setProfile(!showProfile)} id="profile-parent">
@@ -235,6 +242,28 @@ export const Button = styled.button`
     border-radius: 8px;
     transition: all 0.7s ease-in-out;
 
+    &#action-parent{
+        position: relative;
+    }
+    &.reserve{
+        color: #00a2ff;
+        border-color: #00a2ff;
+
+        &:hover{
+            color: #212121;
+            background-color: #00a2ff;
+        }
+    }
+    &.delete{
+        color: red;
+        border-color: red;
+
+        &:hover{
+            color: #212121;
+            background-color: red;
+        }
+    }
+
     &:hover{
         background-color: #808080;
         color: rgb(27 28 31);
@@ -242,6 +271,7 @@ export const Button = styled.button`
 `
 
 const ProfileModalWrapper = styled.div`
+    z-index: 10;
     overflow: hidden;
     width: 200px;
     border-radius: 8px;

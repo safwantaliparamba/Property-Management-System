@@ -25,7 +25,7 @@ def app(request: HttpRequest):
             "title": "Success",
             "name": user.name,
             "email": user.email,
-            "is_landlord": False,  # set it up 
+            "is_landlord": True,  # set it up 
         }
     }
 

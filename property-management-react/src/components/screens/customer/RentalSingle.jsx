@@ -3,12 +3,15 @@ import { styled } from 'styled-components'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import dropdownIcon from "/icons/dropdown-light.svg"
+import HomeImage from "/images/home-1.jpg"
+import { Button } from '../../includes/home/Header'
 
 
 const RentalSingle = () => {
     const { rentalId } = useParams()
     const navigate = useNavigate()
 
+    const [isReserved, setResrve] = useState(false)
     const [property, setProperty] = useState({
         id: "1",
         title: "Spacious Family Home",
@@ -26,16 +29,37 @@ const RentalSingle = () => {
         image: "https://example.com/images/property1.jpg"
     },)
 
+    const navigateToCategory = () => navigate(`/categories/${property.category.toLowerCase()}/`)
+
     return (
         <Wrapper className="wrapper">
             <Head>
                 <img
                     src={dropdownIcon}
                     alt="back button"
-                    onClick={e => navigate(`/categories/${property.category.toLowerCase()}/`)}
+                    onClick={navigateToCategory}
                 />
-                <h1>{property.title}</h1>
             </Head>
+            <Content>
+                <Left>
+                    <img src={HomeImage} alt="" />
+                </Left>
+                <Right>
+                    <Title>
+                        <h1>{property.title}</h1>
+                        <p>{`${property.address}, ${property.description}`}</p>
+                    </Title>
+                    <Category onClick={navigateToCategory}>{property.category}</Category>
+                    
+                    <Details>
+                        <span>Rent - <span className="price">{property.price.toLocaleString()}</span>/m</span>
+                        <span className='info bottom'>Pay registration fee and reserve</span>
+                        <Button className={isReserved ? "" : 'reserve'}>
+                            {isReserved ? "Reserved" : "Reserve Now"}
+                        </Button>
+                    </Details>
+                </Right>
+            </Content>
         </Wrapper>
     )
 }
@@ -53,9 +77,9 @@ const Head = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
+	margin-bottom: 38px;
 	/* justify-content: center; */
 	/* flex-direction: column; */
-	margin-bottom: 58px;
 
 	img{
 		width: 40px;
@@ -77,4 +101,63 @@ const Head = styled.div`
 		font-size: 15px;
 		color: #808080;
 	}
+`
+const Title = styled.div`
+    margin-bottom: 32px;
+
+    h1{
+        font-size: 24px;
+        color: #fff;
+        margin-bottom: 14px;
+    }
+    p{
+        font-size: 15px;
+        color: #808080;
+    }
+`
+
+const Content = styled.section`
+    display: flex;
+`
+
+const Left = styled.div`
+    width: 50%;
+
+    img{
+        border-radius: 8px;
+    }
+`
+
+const Right = styled.div`
+    width: 50%;
+    padding: 0 22px;
+`
+
+const Details = styled.div`
+    display: flex;
+    flex-direction: column;
+    span{
+        font-size: 17px;
+        color: #d9d9d9;
+        &.bottom{
+            margin-bottom: 48px;
+        }
+        &.info{
+            font-size: 14px;
+            color: #808080;
+        }
+        span.price{
+            color: #53ff9e;
+        }
+    }
+`
+const Category = styled.span`
+    padding: 7px 14px;
+    color: #d9d9d9;
+    display: inline-block;
+    border: 1px solid #d9d9d9;
+    margin-bottom: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 7px;
 `

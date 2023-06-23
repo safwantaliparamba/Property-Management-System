@@ -139,8 +139,12 @@ const SignUp = ({ type = "SIGNUP" }) => {
 							refreshToken: data.refresh,
 							isLandlord: data.is_landlord,
 						}))
+
 						const next = searchParams.get("next")
 
+						if (data.is_landlord && !next) {
+							navigate("/dashboard/")
+						}
 						navigate(next)
 					} else {
 						setErrors(data.message)
