@@ -38,3 +38,9 @@ class CreateRentalSerializer(serializers.Serializer):
         )
 
         return rental_property
+    
+
+class RentalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rental
+        fields = ["id","title","address","description","city","category","rent","booking_charge"]

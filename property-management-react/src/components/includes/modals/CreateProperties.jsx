@@ -139,6 +139,7 @@ const popup = keyframes`
 `
 
 const Modal = styled.main`
+    z-index: 12;
     width: 800px;
     height: 500px;
     border: 1px solid #fff;
