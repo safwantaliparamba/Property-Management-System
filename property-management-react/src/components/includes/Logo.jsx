@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
 
 
-const Logo = ({ fontSize = 22, color = null, navToHome = false }) => {
+const Logo = ({ fontSize = 22, color = null, nav = "/" }) => {
     const theme = useSelector(state => state.ui.theme)
+    const { isLandlord } = useSelector(state => state.auth)
     const navigate = useNavigate()
 
     return (
@@ -14,7 +15,7 @@ const Logo = ({ fontSize = 22, color = null, navToHome = false }) => {
             theme={theme}
             color={color}
             className={color ? "color" : ""}
-            onClick={navToHome ? () => navigate("/") : () => { }}
+            onClick={() => navigate(isLandlord ? "/dashboard" : nav)}
         >
             <span>Rent</span>Wise
         </Head>

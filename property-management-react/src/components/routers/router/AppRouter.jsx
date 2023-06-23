@@ -9,19 +9,24 @@ import Header from '../../includes/home/Header';
 import LandlordHome from '../../screens/landlord/LandlordHome';
 import Category from '../../screens/customer/Category';
 import RentalSingle from '../../screens/customer/RentalSingle';
+import LeftSideBar from '../../includes/home/LeftSideBar';
+import ChiefRouter from './ChiefRouter';
+import ChiefPrivateRoute from '../routes/ChiefPrivateRoute';
 
 
 const AppRouter = () => {
     const { theme } = useSelector(state => state.ui)
-    const { isLandlord } = useSelector(state => state.auth)
 
     return (
         <Wrapper theme={theme}>
             <Header />
             <Container>
                 <Routes>
-                    <Route path='' element={(
-                        isLandlord ? <LandlordHome /> : <Home />
+                    <Route path='' element={<Home />} />
+                    <Route path='dashboard/*' element={(
+                        <ChiefPrivateRoute>
+                            <ChiefRouter />
+                        </ChiefPrivateRoute>
                     )} />
                     <Route path='categories/:category/' element={<Category />} />
                     <Route path='prop/:rentalId/' element={<RentalSingle />} />
