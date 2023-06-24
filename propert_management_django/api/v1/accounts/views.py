@@ -19,13 +19,18 @@ from general.functions import is_valid_uuid, getDomain, generate_serializer_erro
 def app(request: HttpRequest):
     user: User = request.user
 
+    is_landlord = False
+
+    if user.landlord.filter(is_deleted=False).exists():
+        is_landlord = True 
+
     response_data = {
         "statusCode": 6000,
         "data": {
             "title": "Success",
             "name": user.name,
             "email": user.email,
-            "is_landlord": True,  # set it up 
+            "is_landlord": is_landlord,  # set it up 
         }
     }
 

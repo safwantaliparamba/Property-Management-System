@@ -1,198 +1,45 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { trimText } from '../../functions'
 import homeImage from "/images/home-1.jpg"
 import dropdownIcon from "/icons/dropdown-light.svg"
+import { authApi } from '../../../config/axios'
+import Loader from '../../includes/loaders/Loader'
 
 
 const Category = () => {
 	const { category } = useParams()
 	const navigate = useNavigate()
 
-	const [items, setItems] = useState([
-		{
-			id: "1",
-			title: "Spacious Family Home",
-			description: "A beautiful and spacious family home located in a peaceful neighborhood.",
-			type: "House",
-			address: "123 Main St",
-			city: "Exampleville",
-			state: "Examplestate",
-			zipcode: "12345",
-			price: 250000,
-			bedrooms: 3,
-			bathrooms: 2,
-			area: 1800,
-			image: "https://example.com/images/property1.jpg"
-		},
-		{
-			id: "2",
-			title: "Cozy Apartment in the Heart of the City",
-			description: "A cozy apartment situated in a prime location with easy access to shops and restaurants.",
-			type: "Apartment",
-			address: "456 Elm St",
-			city: "Sampletown",
-			state: "Samplestate",
-			zipcode: "54321",
-			price: 1500,
-			bedrooms: 2,
-			bathrooms: 1,
-			area: 1000,
-			image: "https://example.com/images/property2.jpg"
-		},
-		{
-			id: "3",
-			title: "Luxurious Condo with Spectacular Views",
-			description: "A luxurious condo offering breathtaking views of the city skyline and top-notch amenities.",
-			type: "Condo",
-			address: "789 Oak St",
-			city: "Testville",
-			state: "Teststate",
-			zipcode: "98765",
-			price: 350000,
-			bedrooms: 4,
-			bathrooms: 3,
-			area: 2200,
-			image: "https://example.com/images/property3.jpg"
-		},
-		{
-			id: "1",
-			title: "Spacious Family Home",
-			description: "A beautiful and spacious family home located in a peaceful neighborhood.",
-			type: "House",
-			address: "123 Main St",
-			city: "Exampleville",
-			state: "Examplestate",
-			zipcode: "12345",
-			price: 250000,
-			bedrooms: 3,
-			bathrooms: 2,
-			area: 1800,
-			image: "https://example.com/images/property1.jpg"
-		},
-		{
-			id: "2",
-			title: "Cozy Apartment in the Heart of the City",
-			description: "A cozy apartment situated in a prime location with easy access to shops and restaurants.",
-			type: "Apartment",
-			address: "456 Elm St",
-			city: "Sampletown",
-			state: "Samplestate",
-			zipcode: "54321",
-			price: 1500,
-			bedrooms: 2,
-			bathrooms: 1,
-			area: 1000,
-			image: "https://example.com/images/property2.jpg"
-		},
-		{
-			id: "3",
-			title: "Luxurious Condo with Spectacular Views",
-			description: "A luxurious condo offering breathtaking views of the city skyline and top-notch amenities.",
-			type: "Condo",
-			address: "789 Oak St",
-			city: "Testville",
-			state: "Teststate",
-			zipcode: "98765",
-			price: 350000,
-			bedrooms: 4,
-			bathrooms: 3,
-			area: 2200,
-			image: "https://example.com/images/property3.jpg"
-		},
-		{
-			id: "1",
-			title: "Spacious Family Home",
-			description: "A beautiful and spacious family home located in a peaceful neighborhood.",
-			type: "House",
-			address: "123 Main St",
-			city: "Exampleville",
-			state: "Examplestate",
-			zipcode: "12345",
-			price: 250000,
-			bedrooms: 3,
-			bathrooms: 2,
-			area: 1800,
-			image: "https://example.com/images/property1.jpg"
-		},
-		{
-			id: "2",
-			title: "Cozy Apartment in the Heart of the City",
-			description: "A cozy apartment situated in a prime location with easy access to shops and restaurants.",
-			type: "Apartment",
-			address: "456 Elm St",
-			city: "Sampletown",
-			state: "Samplestate",
-			zipcode: "54321",
-			price: 1500,
-			bedrooms: 2,
-			bathrooms: 1,
-			area: 1000,
-			image: "https://example.com/images/property2.jpg"
-		},
-		{
-			id: "3",
-			title: "Luxurious Condo with Spectacular Views",
-			description: "A luxurious condo offering breathtaking views of the city skyline and top-notch amenities.",
-			type: "Condo",
-			address: "789 Oak St",
-			city: "Testville",
-			state: "Teststate",
-			zipcode: "98765",
-			price: 350000,
-			bedrooms: 4,
-			bathrooms: 3,
-			area: 2200,
-			image: "https://example.com/images/property3.jpg"
-		},
-		{
-			id: "1",
-			title: "Spacious Family Home",
-			description: "A beautiful and spacious family home located in a peaceful neighborhood.",
-			type: "House",
-			address: "123 Main St",
-			city: "Exampleville",
-			state: "Examplestate",
-			zipcode: "12345",
-			price: 250000,
-			bedrooms: 3,
-			bathrooms: 2,
-			area: 1800,
-			image: "https://example.com/images/property1.jpg"
-		},
-		{
-			id: "2",
-			title: "Cozy Apartment in the Heart of the City",
-			description: "A cozy apartment situated in a prime location with easy access to shops and restaurants.",
-			type: "Apartment",
-			address: "456 Elm St",
-			city: "Sampletown",
-			state: "Samplestate",
-			zipcode: "54321",
-			price: 1500,
-			bedrooms: 2,
-			bathrooms: 1,
-			area: 1000,
-			image: "https://example.com/images/property2.jpg"
-		},
-		{
-			id: "3",
-			title: "Luxurious Condo with Spectacular Views",
-			description: "A luxurious condo offering breathtaking views of the city skyline and top-notch amenities.",
-			type: "Condo",
-			address: "789 Oak St",
-			city: "Testville",
-			state: "Teststate",
-			zipcode: "98765",
-			price: 350000,
-			bedrooms: 4,
-			bathrooms: 3,
-			area: 2200,
-			image: "https://example.com/images/property3.jpg"
-		},
-	])
+	const [items, setItems] = useState([])
+	const [isLoading, setLoading] = useState(false)
+
+	const fetchRentals = () => {
+		setLoading(true)
+
+		authApi
+			.get("/rentals/rental_properties/")
+			.then(({ data: { statusCode, data } }) => {
+
+				if (statusCode === 6000) {
+					setItems(data.data)
+				} else {
+					console.log(data.message);
+				}
+
+				setLoading(false)
+			})
+			.catch((error) => {
+				console.log(error);
+				setLoading(false)
+			})
+	}
+
+	useEffect(() => {
+		fetchRentals()
+	}, [])
 
 	return (
 		<Container>
@@ -205,15 +52,22 @@ const Category = () => {
 				<h1>{category}</h1>
 			</Head>
 			<Items>
-				{items.map(item => (
-					<Item key={item.id} onClick={e => navigate(`/prop/${item.id}/`)}>
-						<img src={homeImage} alt="" />
-						<ItemDetails>
-							<h1>{item.title}</h1>
-							<p>{trimText(`${item.address}, ${item.description}`, 60)}</p>
-						</ItemDetails>
-					</Item>
-				))}
+				{isLoading ? (
+					<LoaderWrapper>
+						<Loader />
+					</LoaderWrapper>
+				) :
+					items.map(item => (
+						<Item key={item.id} onClick={e => navigate(`/prop/${item.id}/`)}>
+							<img src={homeImage} alt="" />
+							<ItemDetails>
+								<h1>{item.title}</h1>
+								<p>{trimText(`${item.address}, ${item.description}`, 60)}</p>
+							</ItemDetails>
+						</Item>
+					))
+
+				}
 			</Items>
 		</Container>
 	)
@@ -226,6 +80,14 @@ const Container = styled.section`
 	padding: 32px 0;
 	max-width: 90%;
 	margin: 0 auto;
+`
+
+export const LoaderWrapper = styled.div`
+	width: 100%;
+	min-height: 300px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 `
 
 const Head = styled.div`
@@ -259,6 +121,7 @@ const Head = styled.div`
 `
 
 const Items = styled.section`
+	width: 100%;
     display: flex;
     /* align-items: center; */
     flex-wrap: wrap;

@@ -6,7 +6,7 @@ import { Button } from '../home/Header'
 import { authApi } from '../../../config/axios'
 
 
-const CreateProperties = ({ onClose = () => { } }) => {
+const EditProperties = ({ onClose = () => { }, id = "" }) => {
     const [inputs, setInputs] = useState({
         title: "",
         address: "",
@@ -60,20 +60,38 @@ const CreateProperties = ({ onClose = () => { } }) => {
 
     useEffect(() => {
         if (errorMessage) {
-            setTimeout(()=>{
+            setTimeout(() => {
                 setError("")
-            },3000)
+            }, 3000)
         }
     }, [errorMessage])
+
+    const fetchData = () => {
+        authApi
+            .get(`/rentals/rental_properties/me/${id}/`)
+            .then(({ data: { statusCode, data } }) => {
+
+                if (statusCode === 6000) {
+                    setInputs({ ...data.data })
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
 
     const onInputChange = (e) => {
         setInputs({ ...inputs, [e.target.name]: e.target.value });
     }
 
-    const createHandler = () => {
+    const updateHandler = () => {
 
         authApi
-            .post("/rentals/create/", { ...inputs })
+            .post(`/rentals/rental_properties/edit/${id}/`, { ...inputs })
             .then(({ data: { statusCode, data } }) => {
 
                 if (statusCode === 6000) {
@@ -88,7 +106,7 @@ const CreateProperties = ({ onClose = () => { } }) => {
         <BaseModal onClick={onClose}>
             <Modal onClick={e => e.stopPropagation()}>
                 <Head>
-                    <h1>Create Property/Rental</h1>
+                    <h1>Edit Property/Rental</h1>
                 </Head>
                 <Form>
                     <InputWrapper>
@@ -114,7 +132,7 @@ const CreateProperties = ({ onClose = () => { } }) => {
                     <Bottom>
                         <Button
                             className='reserve'
-                            onClick={createHandler}
+                            onClick={updateHandler}
                         >
                             Submit
                         </Button>
@@ -125,7 +143,7 @@ const CreateProperties = ({ onClose = () => { } }) => {
     )
 }
 
-export default CreateProperties
+export default EditProperties
 
 const popup = keyframes`
     0%{

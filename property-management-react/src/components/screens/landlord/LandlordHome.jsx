@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 // import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { styled } from 'styled-components'
-import { useNavigate } from 'react-router-dom'
 import useClickOutside from 'react-use-click-outside-hook'
 
 import { trimText } from '../../functions'
@@ -12,11 +11,13 @@ import { authApi } from '../../../config/axios'
 import Loader from '../../includes/loaders/Loader'
 import { Button } from '../../includes/home/Header'
 import CreateProperties from '../../includes/modals/CreateProperties'
+import Delete from '../../includes/modals/Delete'
+import EditProperties from '../../includes/modals/EditProperties'
 
 
 const LandlordHome = () => {
     // const dispatch = useDispatch()
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
     // const [showActions, setActions] = useState(false)
     const [isLoading, setLoading] = useState(false)
@@ -25,6 +26,9 @@ const LandlordHome = () => {
     const [top, setTop] = useState(0)
     const [left, setLeft] = useState(0)
     const [showContextModal, setContext] = useState(false)
+    const [showDelete, setDelete] = useState(false)
+    const [selectedItem, setSelected] = useState("")
+    const [showEdit, setEdit] = useState(false)
 
     const fetchRentals = () => {
         setLoading(true)
@@ -32,12 +36,11 @@ const LandlordHome = () => {
         authApi
             .get("/rentals/rental_properties/me/")
             .then(({ data: { statusCode, data } }) => {
-                console.log(statusCode);
 
                 if (statusCode === 6000) {
                     setItems(data.data)
-                    setLoading(false)
                 }
+                setLoading(false)
             })
             .catch(err => {
                 console.log(err);
@@ -48,32 +51,6 @@ const LandlordHome = () => {
     useEffect(() => {
         fetchRentals()
     }, [])
-
-    // const closeActionModal = () => setActions(false)
-
-    // const ActionModal = () => {
-    //     const modalRef = useClickOutside(closeActionModal, "action-parent")
-
-    //     return (
-    //         <ModalWrapper
-    //             ref={modalRef}
-    //             onClick={e => e.stopPropagation()}
-    //         >
-    //             <ModalItem onClick={e => {
-    //                 setCreate(true)
-    //                 closeActionModal()
-    //             }}>
-    //                 <span>Create</span>
-    //             </ModalItem>
-    //             <ModalItem>
-    //                 <span>Edit</span>
-    //             </ModalItem>
-    //             <ModalItem className='logout'>
-    //                 <span>Delete</span>
-    //             </ModalItem>
-    //         </ModalWrapper>
-    //     )
-    // }
 
     const onContextChange = (e) => {
         e.preventDefault();
@@ -101,6 +78,30 @@ const LandlordHome = () => {
         setContext(false)
     }
 
+    const closeDeleteHandler = () => {
+        setDelete(false)
+    }
+
+    const propertyDeleteHandler = () => {
+        authApi
+            .post(`/rentals/rental_properties/delete/${selectedItem}/`)
+            .then(({ data: { statusCode, data } }) => {
+
+                if (statusCode === 6000) {
+                    closeDeleteHandler()
+                    fetchRentals()
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    const closeEditModal = () => {
+        setEdit(false)
+        fetchRentals()
+    }
+
     const ContextModal = () => {
         const modalRef = useClickOutside(CloseContextModal)
 
@@ -112,13 +113,23 @@ const LandlordHome = () => {
                 top={top}
                 left={left}
             >
-                <ContextItem>
+                <ContextItem
+                    onClick={e => {
+                        setEdit(!showEdit)
+                        CloseContextModal()
+                    }}
+                >
                     <span>Edit</span>
                 </ContextItem>
-                <ContextItem>
+                <ContextItem
+                    onClick={e => {
+                        setDelete(!showDelete)
+                        CloseContextModal()
+                    }}
+                >
                     <span className="delete">Delete</span>
                 </ContextItem>
-            </ContextModalWrapper>
+            </ContextModalWrapper >
         )
     }
 
@@ -128,6 +139,18 @@ const LandlordHome = () => {
             {showCreateProp && (
                 <CreateProperties
                     onClose={closeCreateModal}
+                />
+            )}
+            {showDelete && (
+                <Delete
+                    onClose={closeDeleteHandler}
+                    deleteHandler={propertyDeleteHandler}
+                />
+            )}
+            {showEdit && (
+                <EditProperties
+                    id={selectedItem}
+                    onClose={closeEditModal}
                 />
             )}
             <Actions>
@@ -154,6 +177,7 @@ const LandlordHome = () => {
                             key={item.id}
                             onContextMenu={e => {
                                 setContext(true)
+                                setSelected(item.id)
                                 onContextChange(e)
                             }}
                         // onClick={e => navigate(`/prop/${item.id}/`)}
@@ -239,7 +263,7 @@ const LoaderWrapper = styled.div`
     justify-content: center;
 `
 const Items = styled.section`
-    width: 80%;
+    width: 85%;
     margin: 0 auto;
     display: flex;
     /* align-items: center; */
@@ -270,6 +294,7 @@ const ItemDetails = styled.div`
 	width: 100%;
 	height: 100%;
 	margin-top: -28px;
+    padding: 8px;
 	background: #f1f1f1;
 	/* background-color: rgb(22 22 25); */
 	border-radius: 12px;
@@ -292,6 +317,7 @@ const ItemDetails = styled.div`
 const ContextModalWrapper = styled.div`
     /* display: none; */
     visibility: none;
+    pointer-events: none;
     border: 1px solid #fff;
     background-color: rgb(22 22 25);
     opacity: 0;
@@ -305,6 +331,7 @@ const ContextModalWrapper = styled.div`
     border-radius: 12px;
 
     &.active{
+        pointer-events:auto;
         visibility:visible;
         user-select:auto;
         opacity:1;
@@ -328,6 +355,6 @@ const ContextItem = styled.div`
     }
 
     &:hover{
-        background-color: #8080803a;
+        background-color: #80808018;
     }
 `
