@@ -343,7 +343,7 @@ const ContextItem = styled.div`
     cursor: pointer;
 
     span{
-        padding: 6px 12px;
+        padding: 9px 18px;
         font-size: 16px;
         display: block;
         width: 100%;

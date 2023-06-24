@@ -25,6 +25,7 @@ const App = () => {
 				const { statusCode, data } = res.data
 
 				if (statusCode === 6000) {
+
 					dispatch(editUserData({
 						name: data.name,
 						email: data.email,
@@ -48,6 +49,8 @@ const App = () => {
 		if (isAuthenticated && !authURLS.includes(location.pathname.toLowerCase())) validateUser()
 
 	}, [])
+
+	
 
 	return (
 		<>
