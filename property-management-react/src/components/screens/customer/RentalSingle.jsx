@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import dropdownIcon from "/icons/dropdown-light.svg"
 import HomeImage from "/images/home-1.jpg"
 import { Button } from '../../includes/home/Header'
+import { authApi } from '../../../config/axios'
+import Loader from '../../includes/loaders/Loader'
+import { LoaderWrapper } from './Category'
 
 
 const RentalSingle = () => {
@@ -28,6 +31,31 @@ const RentalSingle = () => {
         area: 1800,
         image: "https://example.com/images/property1.jpg"
     },)
+    const [isLoading, setLoading] = useState(false)
+
+    const fetchProperty = () => {
+        setLoading(true)
+
+        authApi
+            .get(`/rentals/rental_properties/${rentalId}/`)
+            .then(({ data: { statusCode, data } }) => {
+
+                if (statusCode === 6000) {
+                    setProperty(data.data)
+                } else {
+                    //
+                }
+                setLoading(false)
+            })
+            .catch(err => {
+                console.log(err);
+                setLoading(false)
+            })
+    }
+
+    useEffect(() => {
+        fetchProperty()
+    }, [])
 
     const navigateToCategory = () => navigate(`/categories/${property.category.toLowerCase()}/`)
 
@@ -41,24 +69,32 @@ const RentalSingle = () => {
                 />
             </Head>
             <Content>
-                <Left>
-                    <img src={HomeImage} alt="" />
-                </Left>
-                <Right>
-                    <Title>
-                        <h1>{property.title}</h1>
-                        <p>{`${property.address}, ${property.description}`}</p>
-                    </Title>
-                    <Category onClick={navigateToCategory}>{property.category}</Category>
-                    
-                    <Details>
-                        <span>Rent - <span className="price">{property.price.toLocaleString()}</span>/m</span>
-                        <span className='info bottom'>Pay registration fee and reserve</span>
-                        <Button className={isReserved ? "" : 'reserve'}>
-                            {isReserved ? "Reserved" : "Reserve Now"}
-                        </Button>
-                    </Details>
-                </Right>
+                {isLoading ? (
+                    <LoaderWrapper>
+                        <Loader />
+                    </LoaderWrapper>
+                ) : (
+                    <>
+                        <Left>
+                            <img src={HomeImage} alt="" />
+                        </Left>
+                        <Right>
+                            <Title>
+                                <h1>{property.title}</h1>
+                                <p>{`${property.address}, ${property.description}`}</p>
+                            </Title>
+                            <Category onClick={navigateToCategory}>{property.category}</Category>
+
+                            <Details>
+                                <span>Rent - <span className="price">{Number(property.rent).toLocaleString()}</span>/m</span>
+                                <span className='info bottom'>Pay registration fee and reserve</span>
+                                <Button className={isReserved ? "" : 'reserve'}>
+                                    {isReserved ? "Reserved" : "Reserve Now"}
+                                </Button>
+                            </Details>
+                        </Right>
+                    </>
+                )}
             </Content>
         </Wrapper>
     )
